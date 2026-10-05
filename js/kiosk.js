@@ -14,7 +14,7 @@ const st = { codigo: "", empleado: null, estado: null, ocupado: false, timer: nu
 
 function tickReloj() {
   const d = new Date();
-  $("k-fecha").textContent = d.toLocaleDateString("es-EC", { day: "2-digit", month: "2-digit", year: "numeric" });
+  $("k-fecha").textContent = d.toLocaleDateString("es-EC", { weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase());
   $("k-hora").textContent = d.toLocaleTimeString("es-EC", { hour12: false });
 }
 

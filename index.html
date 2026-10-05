@@ -3,18 +3,25 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#2f4a3a" />
+<meta name="theme-color" content="#849e4d" />
 <title>Control de Asistencia · Healthy Food</title>
 <link rel="manifest" href="manifest.json" />
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="icon" href="icons/icon-192.png" type="image/png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
 <div class="kiosk">
   <header class="k-head">
-    <div class="k-brand">Healthy<br />Food</div>
-    <h1>Control de Asistencia<br />de Planta</h1>
+    <img class="k-logo" src="icons/logo.png" alt="Healthy Food" />
+    <div class="k-titulo">
+      <span class="k-over">Talento Humano · Planta</span>
+      <h1>Registro de Asistencia</h1>
+    </div>
     <div class="k-clock">
       <div id="k-fecha" class="k-fecha"></div>
       <div id="k-hora" class="k-hora"></div>
@@ -34,16 +41,28 @@
     <div id="k-nombre" class="k-nombre"></div>
     <div id="k-detalle" class="k-detalle"></div>
     <div class="k-acciones">
-      <button class="acc acc-ingreso" data-accion="Ingreso" disabled>Ingreso<br />Jornada</button>
-      <button class="acc acc-salida" data-accion="Salida" disabled>Salida<br />Jornada</button>
-      <button class="acc acc-almini" data-accion="Inicio_Almuerzo" disabled>Inicio<br />Alimentación</button>
-      <button class="acc acc-almfin" data-accion="Fin_Almuerzo" disabled>Fin<br />Alimentación</button>
+      <button class="acc acc-ingreso" data-accion="Ingreso" disabled>
+        <svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M14 3h5a2 2 0 012 2v14a2 2 0 01-2 2h-5"/></svg>
+        <span>Ingreso<small>Jornada</small></span>
+      </button>
+      <button class="acc acc-salida" data-accion="Salida" disabled>
+        <svg viewBox="0 0 24 24"><path d="M16 17l5-5-5-5M21 12H9M10 3H5a2 2 0 00-2 2v14a2 2 0 002 2h5"/></svg>
+        <span>Salida<small>Jornada</small></span>
+      </button>
+      <button class="acc acc-almini" data-accion="Inicio_Almuerzo" disabled>
+        <svg viewBox="0 0 24 24"><path d="M6 3v8a2 2 0 002 2v8M10 3v8a2 2 0 01-2 2M8 3v6M17 21V3c-2 1.5-3 4-3 8h3"/></svg>
+        <span>Inicio<small>Alimentación</small></span>
+      </button>
+      <button class="acc acc-almfin" data-accion="Fin_Almuerzo" disabled>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M5 3L2 6M19 3l3 3"/></svg>
+        <span>Fin<small>Alimentación</small></span>
+      </button>
     </div>
   </section>
 
   <section class="k-pad">
     <div class="k-codigo-wrap">
-      <span>Ingrese aquí<br />su Código:</span>
+      <span class="k-pad-titulo">Ingrese su código</span>
       <span id="k-codigo" class="k-codigo"></span>
     </div>
     <div id="k-codigo-error" class="k-codigo-error"></div>
@@ -60,6 +79,10 @@
       <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8c0-3.3 3.1-6 7-6s7 2.7 7 6v1H5zm-2.5-9a2.5 2.5 0 105 0 2.5 2.5 0 00-5 0zm14 0a2.5 2.5 0 105 0 2.5 2.5 0 00-5 0z"/></svg>
     </button>
     <span id="sync-chip" class="sync-chip"></span>
+    <div class="k-firma">
+      <img src="icons/logo.png" alt="" />
+      <span><b>Healthy Food Marcalman S.A.S.</b> · Su registro es personal e intransferible</span>
+    </div>
   </footer>
 </div>
 

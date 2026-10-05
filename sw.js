@@ -3,9 +3,9 @@
 // Las marcaciones viven en IndexedDB, no aquí. Estrategia "red primero"
 // (lección de Hub Limpieza: con "caché primero" las tablets se quedaban
 // para siempre con la primera versión del JS).
-const CACHE_NAME = "hub-asistencia-v1";
+const CACHE_NAME = "hub-asistencia-v2";
 const SHELL_FILES = [
-  "./", "./index.html", "./manifest.json", "./css/styles.css", "./icons/icon.svg",
+  "./", "./index.html", "./manifest.json", "./css/styles.css", "./icons/logo.png", "./icons/icon-192.png",
   "./js/app.js", "./js/config.js", "./js/auth.js", "./js/graph.js", "./js/db.js",
   "./js/store.js", "./js/camera.js", "./js/kiosk.js", "./js/admin.js", "./js/dom.js",
   "./vendor/msal-browser.min.js",
