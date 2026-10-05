@@ -99,9 +99,39 @@ function overlay(tipo, titulo, cuerpo, botones = null, ms = 2600) {
     ]),
   ]);
   root.appendChild(box);
-  if (!botones) setTimeout(() => box.remove(), ms);
+  if (!botones) {
+    setTimeout(() => box.remove(), ms);
+    // Un toque cierra el aviso, para que el siguiente no tenga que esperar.
+    box.addEventListener("pointerdown", () => box.remove());
+  }
   return box;
 }
+
+// ---- mensajes de bienvenida / despedida ----
+
+const MENSAJES = {
+  Ingreso: ["¡Que tenga un excelente día!", "¡Mucho éxito en su jornada!", "¡Qué bueno verle, a darlo todo hoy!", "¡Que sea una gran jornada!"],
+  Inicio_Almuerzo: ["¡Disfrute su comida!", "¡A recargar energías!", "¡Tómese su tiempo y disfrute!"],
+  Fin_Almuerzo: ["¡De vuelta a la jornada!", "¡A seguir con todo!", "¡Con energía renovada!"],
+  Salida: ["¡Gracias por su trabajo hoy, nos vemos pronto!", "¡Buen descanso, hasta pronto!", "¡Gracias por su esfuerzo, que descanse!", "¡Chao, nos vemos pronto!"],
+};
+
+// Nombres en la lista: "APELLIDO APELLIDO NOMBRE NOMBRE" → primer nombre.
+function primerNombre(completo) {
+  const t = completo.replace(/\(.*?\)|_.*$/g, "").trim().split(/\s+/);
+  const n = t.length >= 3 ? t[2] : t[t.length - 1] || "";
+  return n.charAt(0) + n.slice(1).toLowerCase();
+}
+
+function saludo(accion, nombre) {
+  const h = new Date().getHours();
+  const hola = h < 12 ? "¡Buenos días" : h < 19 ? "¡Buenas tardes" : "¡Buenas noches";
+  if (accion === "Salida") return `¡Hasta pronto, ${nombre}!`;
+  if (accion === "Inicio_Almuerzo") return `¡Buen provecho, ${nombre}!`;
+  return `${hola}, ${nombre}!`;
+}
+
+const alAzar = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 function preguntar(titulo, cuerpo, textoSi) {
   return new Promise((resolve) => {
@@ -151,7 +181,14 @@ async function alPresionar(accion) {
 
     if (res.ok) {
       const extra = cara === "Detectada" ? "" : `<div class="ov-nota">Rostro: ${cara}</div>`;
-      overlay("ok", "Registro exitoso", `${st.empleado.nombre}<br><span class="ov-accion">${store.ETIQUETAS[accion]}</span><br><span class="ov-hora">${store.hhmm(res.reg.ts)}</span>${extra}`);
+      const nombre = primerNombre(st.empleado.nombre);
+      overlay(
+        "ok",
+        saludo(accion, nombre),
+        `<div class="ov-frase">${alAzar(MENSAJES[accion])}</div><span class="ov-accion">${store.ETIQUETAS[accion]} · ${store.hhmm(res.reg.ts)}</span>${extra}`,
+        null,
+        1500
+      );
       limpiar();
     }
   } catch (e) {

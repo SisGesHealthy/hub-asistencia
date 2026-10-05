@@ -179,7 +179,10 @@ button { font-family: inherit; cursor: pointer; touch-action: manipulation; }
 .ov-ok .ov-titulo { color: var(--ok); }
 .ov-error .ov-titulo { color: var(--err); }
 .ov-cuerpo { font-size: 22px; line-height: 1.4; }
-.ov-accion { font-weight: 700; }
+.ov-accion { font-weight: 700; font-size: 18px; color: var(--dim); }
+.ov-frase { font-size: 24px; font-weight: 600; margin-bottom: 10px; }
+.ov-ok .ov-card { animation: ov-in .18s ease-out; }
+@keyframes ov-in { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
 .ov-hora { font-size: 44px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .ov-nota { font-size: 15px; color: var(--warn); margin-top: 8px; }
 .ov-botones { display: flex; gap: 12px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
