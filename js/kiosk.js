@@ -223,7 +223,7 @@ export async function iniciarKiosco({ onAdmin }) {
   document.querySelectorAll(".pad button").forEach((b) => b.addEventListener("click", () => tecla(b.dataset.d)));
   document.querySelectorAll(".acc").forEach((b) => b.addEventListener("click", () => alPresionar(b.dataset.accion)));
   document.addEventListener("keydown", (e) => {
-    if (document.querySelector(".admin") || e.target.tagName === "INPUT") return;
+    if (document.querySelector(".admin, .ov-aviso") || e.target.tagName === "INPUT") return;
     if (/^[0-9]$/.test(e.key)) tecla(e.key);
     else if (e.key === "Backspace") tecla("borrar");
     else if (e.key === "Escape") tecla("ok");

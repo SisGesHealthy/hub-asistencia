@@ -10,34 +10,56 @@ import { login, logout, getCurrentUser } from "./auth.js";
 
 const root = () => document.getElementById("overlay-root");
 
+// PIN con teclado en pantalla propio: en la tablet el teclado del sistema
+// (autocorrector, espacios, teclado de letras) hacía fallar el PIN.
+// También acepta el teclado físico. Valida solo al llegar a la longitud.
 export function pedirPin(onOk) {
-  const input = el("input", { type: "password", inputmode: "numeric", class: "pin-input", autocomplete: "off" });
+  let pin = "";
+  const pinLen = CONFIG.pinAdmin.length;
+  const puntos = el("div", { class: "pin-input" });
   const err = el("div", { class: "pin-err" });
-  const cerrar = () => box.remove();
-  const validar = () => {
-    if (input.value === CONFIG.pinAdmin) {
-      cerrar();
-      onOk();
-    } else {
-      err.textContent = "PIN incorrecto";
-      input.value = "";
+  const pintar = () => (puntos.textContent = "•".repeat(pin.length) || " ");
+  const cerrar = () => {
+    document.removeEventListener("keydown", onKey);
+    box.remove();
+  };
+  const tecla = (d) => {
+    err.textContent = "";
+    if (d === "borrar") pin = pin.slice(0, -1);
+    else if (pin.length < pinLen) pin += d;
+    pintar();
+    if (pin.length === pinLen) {
+      if (pin === CONFIG.pinAdmin) {
+        cerrar();
+        onOk();
+      } else {
+        err.textContent = "PIN incorrecto";
+        pin = "";
+        setTimeout(pintar, 300);
+      }
     }
   };
-  input.addEventListener("keydown", (e) => e.key === "Enter" && validar());
+  const onKey = (e) => {
+    if (/^[0-9]$/.test(e.key)) tecla(e.key);
+    else if (e.key === "Backspace") tecla("borrar");
+    else if (e.key === "Escape") cerrar();
+  };
+  document.addEventListener("keydown", onKey);
+  const teclas = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "borrar", "0"].map((d) =>
+    el("button", { class: d === "borrar" ? "pad-borrar" : "", onclick: () => tecla(d) }, d === "borrar" ? "Borrar" : d)
+  );
   const box = el("div", { class: "ov ov-aviso" }, [
     el("div", { class: "ov-card" }, [
       el("div", { class: "ov-titulo" }, "Panel de Talento Humano"),
-      input,
+      puntos,
       err,
-      el("div", { class: "ov-botones" }, [
-        el("button", { class: "ov-btn ov-btn-sec", onclick: cerrar }, "Cancelar"),
-        el("button", { class: "ov-btn", onclick: validar }, "Entrar"),
-      ]),
+      el("div", { class: "pad pin-pad" }, teclas),
+      el("div", { class: "ov-botones" }, [el("button", { class: "ov-btn ov-btn-sec", onclick: cerrar }, "Cancelar")]),
     ]),
   ]);
   root().innerHTML = "";
   root().appendChild(box);
-  input.focus();
+  pintar();
 }
 
 export function abrirPanel() {

@@ -189,7 +189,10 @@ button { font-family: inherit; cursor: pointer; touch-action: manipulation; }
 .ov-btn { background: var(--key); color: #fff; border: none; border-radius: 12px; padding: 12px 22px; font-size: 17px; font-weight: 700; }
 .ov-btn-sec { background: transparent; color: var(--ink); border: 1px solid var(--border); }
 .pin-input { font-size: 28px; text-align: center; letter-spacing: 8px; width: 200px; padding: 8px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--ink); font-family: inherit; }
-.pin-err { color: var(--err); min-height: 22px; margin-top: 8px; }
+.pin-input { margin: 0 auto; min-height: 56px; display: flex; align-items: center; justify-content: center; }
+.pin-err { color: var(--err); min-height: 22px; margin-top: 8px; font-weight: 600; }
+.pin-pad { max-width: 300px; margin: 8px auto 0; }
+.pin-pad button { min-height: 60px; font-size: 26px; }
 
 /* ---------- panel TH ---------- */
 .admin { position: fixed; inset: 0; background: var(--bg); z-index: 40; display: flex; flex-direction: column; user-select: text; -webkit-user-select: text; }
