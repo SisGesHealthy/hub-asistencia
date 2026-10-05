@@ -6,7 +6,9 @@ import { iniciarKiosco } from "./kiosk.js";
 import { pedirPin, abrirPanel } from "./admin.js";
 
 async function main() {
-  if (!CONFIG.useMock) await initAuth().catch((e) => console.warn("MSAL:", e));
+  let cuenta = null;
+  if (!CONFIG.useMock) cuenta = await initAuth().catch((e) => console.warn("MSAL:", e));
+  if (!CONFIG.useMock && !cuenta) store.marcarSinSesion();
 
   // Empleados: primero la copia local (instantáneo), luego refresco.
   const locales = await store.cargarEmpleadosLocales();

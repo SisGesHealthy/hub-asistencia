@@ -176,6 +176,14 @@ export const onSyncChange = (fn) => listeners.add(fn);
 const emit = () => listeners.forEach((fn) => fn({ ...syncState }));
 export const getSyncState = () => ({ ...syncState });
 
+// Tablet recién instalada (o sesión cerrada): avisar desde el arranque, sin
+// esperar a que falle el primer envío.
+export function marcarSinSesion() {
+  syncState.estado = "sesion";
+  syncState.error = "Esta tablet no tiene sesión de Microsoft; inicia sesión desde el panel de TH.";
+  emit();
+}
+
 function nombreFoto(reg) {
   const d = new Date(reg.ts);
   const f = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;

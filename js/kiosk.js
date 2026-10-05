@@ -165,7 +165,7 @@ function pintarSync(s) {
     ok: s.pendientes ? `Enviando ${s.pendientes}…` : "Sincronizado",
     offline: `Sin internet · ${s.pendientes} en espera`,
     error: `Reintentando · ${s.pendientes} en espera`,
-    sesion: `Sesión vencida · ${s.pendientes} en espera`,
+    sesion: `Falta iniciar sesión (TH) · ${s.pendientes} en espera`,
   }[s.estado];
   chip.textContent = txt;
   chip.className = `sync-chip sync-${s.estado}`;

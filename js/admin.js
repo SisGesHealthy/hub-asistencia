@@ -201,7 +201,7 @@ async function vistaTablet(body) {
             user
               ? el("button", { class: "ov-btn ov-btn-sec", onclick: () => logout() }, "Cerrar sesión")
               : el("button", { class: "ov-btn", onclick: () => login() }, "Iniciar sesión"),
-            s.estado === "sesion" ? el("button", { class: "ov-btn", onclick: () => login() }, "Volver a iniciar sesión") : null,
+            user && s.estado === "sesion" ? el("button", { class: "ov-btn", onclick: () => login() }, "Volver a iniciar sesión") : null,
           ]),
     ]),
     el("section", { class: "tab-sec" }, [
