@@ -187,7 +187,7 @@ async function alPresionar(accion) {
         saludo(accion, nombre),
         `<div class="ov-frase">${alAzar(MENSAJES[accion])}</div><span class="ov-accion">${store.ETIQUETAS[accion]} · ${store.hhmm(res.reg.ts)}</span>${extra}`,
         null,
-        2000
+        2500
       );
       limpiar();
     }
