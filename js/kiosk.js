@@ -54,7 +54,13 @@ async function alCambiarCodigo() {
     $("k-nombre").textContent = "";
     $("k-detalle").textContent = "";
     document.querySelectorAll(".acc").forEach((b) => (b.disabled = true));
-    if (st.codigo.length >= 4) $("k-codigo-error").textContent = "Código no válido";
+    if (st.codigo.length >= 4) {
+      // Tablet nueva sin sesión: no es que el código esté mal, es que aún
+      // no se descargó la lista de empleados.
+      $("k-codigo-error").textContent = store.totalEmpleados() === 0
+        ? "Lista de empleados no cargada — avise a Talento Humano"
+        : "Código no válido";
+    }
     return;
   }
   st.empleado = emp;
