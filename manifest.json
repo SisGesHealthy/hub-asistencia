@@ -1,0 +1,10 @@
+{
+  "name": "Control de Asistencia · Healthy Food",
+  "short_name": "Asistencia",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#dfe8d6",
+  "theme_color": "#2f4a3a",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

@@ -1,0 +1,4 @@
+# Datos reales de personal: solo para el modo demo local, nunca al repo.
+data/empleados_demo.json
+data/asistencias_demo.json
+__pycache__/

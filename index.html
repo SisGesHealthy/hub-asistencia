@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#2f4a3a" />
+<title>Control de Asistencia · Healthy Food</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div class="kiosk">
+  <header class="k-head">
+    <div class="k-brand">Healthy<br />Food</div>
+    <h1>Control de Asistencia<br />de Planta</h1>
+    <div class="k-clock">
+      <div id="k-fecha" class="k-fecha"></div>
+      <div id="k-hora" class="k-hora"></div>
+    </div>
+  </header>
+
+  <section class="k-cam">
+    <div id="cam-box" class="cam-box">
+      <video id="cam-video" playsinline muted autoplay></video>
+      <div id="cam-msg" class="cam-msg">Iniciando cámara…</div>
+    </div>
+    <div id="cara-hint" class="cara-hint"></div>
+  </section>
+
+  <section class="k-persona">
+    <div class="k-label">Nombre</div>
+    <div id="k-nombre" class="k-nombre"></div>
+    <div id="k-detalle" class="k-detalle"></div>
+    <div class="k-acciones">
+      <button class="acc acc-ingreso" data-accion="Ingreso" disabled>Ingreso<br />Jornada</button>
+      <button class="acc acc-salida" data-accion="Salida" disabled>Salida<br />Jornada</button>
+      <button class="acc acc-almini" data-accion="Inicio_Almuerzo" disabled>Inicio<br />Alimentación</button>
+      <button class="acc acc-almfin" data-accion="Fin_Almuerzo" disabled>Fin<br />Alimentación</button>
+    </div>
+  </section>
+
+  <section class="k-pad">
+    <div class="k-codigo-wrap">
+      <span>Ingrese aquí<br />su Código:</span>
+      <span id="k-codigo" class="k-codigo"></span>
+    </div>
+    <div id="k-codigo-error" class="k-codigo-error"></div>
+    <div class="pad">
+      <button data-d="1">1</button><button data-d="2">2</button><button data-d="3">3</button>
+      <button data-d="4">4</button><button data-d="5">5</button><button data-d="6">6</button>
+      <button data-d="7">7</button><button data-d="8">8</button><button data-d="9">9</button>
+      <button class="pad-borrar" data-d="borrar">Borrar</button><button data-d="0">0</button><button class="pad-ok" data-d="ok" aria-label="Limpiar">✕</button>
+    </div>
+  </section>
+
+  <footer class="k-foot">
+    <button id="btn-admin" class="btn-admin" aria-label="Panel de Talento Humano">
+      <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm-7 8c0-3.3 3.1-6 7-6s7 2.7 7 6v1H5zm-2.5-9a2.5 2.5 0 105 0 2.5 2.5 0 00-5 0zm14 0a2.5 2.5 0 105 0 2.5 2.5 0 00-5 0z"/></svg>
+    </button>
+    <span id="sync-chip" class="sync-chip"></span>
+  </footer>
+</div>
+
+<div id="overlay-root"></div>
+
+<script src="vendor/msal-browser.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
