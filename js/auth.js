@@ -43,11 +43,13 @@ export async function initAuth() {
 }
 
 export function login() {
-  return getMsal().loginRedirect({ scopes: SCOPES });
+  // select_account: que siempre se pueda elegir con qué cuenta queda la tablet
+  // (si el navegador ya tiene abierta otra, ej. la de administrador).
+  return getMsal().loginRedirect({ scopes: SCOPES, prompt: "select_account" });
 }
 
 export function logout() {
-  return getMsal().logoutRedirect();
+  return getMsal().logoutRedirect({ account });
 }
 
 export function getCurrentUser() {
