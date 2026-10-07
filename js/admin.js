@@ -157,8 +157,12 @@ async function vistaReporte(body) {
   const consultar = async () => {
     tabla.innerHTML = "<p class='vacio'>Consultando…</p>";
     try {
+      store.registrosRango.soloLocal = "";
       jornadas = store.armarJornadas(await store.registrosRango(desde.value, hasta.value));
       pintar();
+      if (store.registrosRango.soloLocal) {
+        tabla.prepend(el("p", { class: "vacio err" }, "Sin conexión con SharePoint: se muestra solo lo guardado en ESTA tablet. Inicie sesión en \"Esta tablet\" para enviar lo pendiente."));
+      }
     } catch (e) {
       tabla.innerHTML = "";
       tabla.appendChild(el("p", { class: "vacio err" }, `No se pudo consultar: ${e.message}`));

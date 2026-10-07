@@ -296,16 +296,29 @@ export async function registrosRango(desde, hasta) {
   if (CONFIG.useMock) {
     regs = (await idb.getAll("registros")).filter((r) => r.jornada >= desde && r.jornada <= hasta);
   } else {
-    regs = await graph.graphGetRegistros(desde, hasta);
-    // Lo que aún no se subió desde ESTA tablet también cuenta.
+    // Sin sesión o sin internet el reporte NO se cae: muestra lo que está
+    // guardado en esta tablet (incluidas las marcaciones aún sin enviar), así
+    // TH puede verlas y descargarlas igual.
+    try {
+      regs = await graph.graphGetRegistros(desde, hasta);
+    } catch (e) {
+      regs = [];
+      registrosRango.soloLocal = e.message;
+    }
     const ids = new Set(regs.map((r) => r.idLocal));
+    const todoLocal = regs.length === 0;
     for (const r of await idb.getAll("registros")) {
-      if (!r.sincronizado && r.jornada >= desde && r.jornada <= hasta && !ids.has(r.idLocal)) regs.push(r);
+      if (r.jornada >= desde && r.jornada <= hasta && !ids.has(r.idLocal) && (todoLocal || !r.sincronizado)) regs.push(r);
     }
   }
   // Un mismo idLocal nunca cuenta dos veces (por si un reintento duplicó).
   const unicos = new Map(regs.map((r) => [r.idLocal, r]));
   return [...unicos.values()].sort((a, b) => a.ts - b.ts);
+}
+
+// Marcaciones guardadas en esta tablet que todavía no llegan a SharePoint.
+export async function pendientesLocales() {
+  return (await idb.getAll("registros")).filter((r) => !r.sincronizado).sort((a, b) => a.ts - b.ts);
 }
 
 // Agrupa por persona + jornada y detecta novedades.

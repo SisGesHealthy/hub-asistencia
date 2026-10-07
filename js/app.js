@@ -10,6 +10,10 @@ async function main() {
   if (!CONFIG.useMock) cuenta = await initAuth().catch((e) => console.warn("MSAL:", e));
   if (!CONFIG.useMock && !cuenta) store.marcarSinSesion();
 
+  // Almacenamiento persistente: que el navegador nunca borre por espacio las
+  // marcaciones guardadas en la tablet que aún no se envían.
+  navigator.storage?.persist?.().catch(() => {});
+
   // Empleados: primero la copia local (instantáneo), luego refresco.
   const locales = await store.cargarEmpleadosLocales();
   const refresco = store.refrescarEmpleados().catch((e) => console.warn("Empleados:", e.message));
