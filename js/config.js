@@ -10,7 +10,9 @@ export const CONFIG = {
   msal: {
     clientId: "6ddebf41-051f-4360-bbab-225efdca198d",
     authority: "https://login.microsoftonline.com/8f9b210d-f5e5-404f-9fed-a0a827154105",
-    redirectUri: window.location.origin + window.location.pathname,
+    // Siempre la carpeta, sin "index.html": la app instalada abre
+    // .../index.html y Entra ID solo tiene registrada la URL de la carpeta.
+    redirectUri: window.location.origin + window.location.pathname.replace(/index\.html$/, ""),
   },
 
   graph: {
