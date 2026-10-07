@@ -58,6 +58,34 @@ export function getCurrentUser() {
 
 export class SesionVencidaError extends Error {}
 
+// Renovación automática de la sesión del kiosco.
+// Microsoft limita a 24 h el "refresh token" de las apps web: pasado ese
+// plazo acquireTokenSilent falla aunque la cuenta siga activa, y la tablet
+// dejaba de enviar (las marcaciones quedaban guardadas en la tablet, en
+// espera). La salida es un ida y vuelta a login.microsoftonline.com con
+// prompt "none": si la cookie de Microsoft sigue válida vuelve sola en ~2 s
+// con un token nuevo, SIN mostrar ninguna pantalla; si de verdad hace falta
+// escribir la contraseña, vuelve con error (no se queda en la página de
+// login) y el chip rojo pide a TH iniciar sesión.
+// app.js solo la llama con el kiosco libre y como máximo cada 20 min.
+const LS_RENOVACION = "hub-asistencia:ultima-renovacion";
+
+export function puedeRenovar() {
+  if (!account) return false;
+  let ultima = 0;
+  try {
+    ultima = Number(localStorage.getItem(LS_RENOVACION) || 0);
+  } catch {}
+  return Date.now() - ultima > 20 * 60 * 1000;
+}
+
+export function renovarSesion() {
+  try {
+    localStorage.setItem(LS_RENOVACION, String(Date.now()));
+  } catch {}
+  return getMsal().acquireTokenRedirect({ scopes: SCOPES, account, prompt: "none" });
+}
+
 // Nunca redirige: lanza SesionVencidaError y el que llama decide.
 export async function getAccessTokenSilent() {
   if (!account) throw new SesionVencidaError("No hay sesión iniciada en esta tablet.");

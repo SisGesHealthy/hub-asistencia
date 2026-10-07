@@ -8,7 +8,7 @@ import * as cam from "./camera.js";
 
 const $ = (id) => document.getElementById(id);
 
-const st = { codigo: "", empleado: null, estado: null, ocupado: false, timer: null };
+const st = { codigo: "", empleado: null, estado: null, ocupado: false, timer: null, ultimoToque: 0 };
 
 // ---- reloj ----
 
@@ -87,6 +87,7 @@ async function pintarEstado(emp) {
 }
 
 function tecla(d) {
+  st.ultimoToque = Date.now();
   if (st.ocupado) return;
   if (d === "borrar") st.codigo = st.codigo.slice(0, -1);
   else if (d === "ok") st.codigo = "";
@@ -252,6 +253,12 @@ export async function iniciarKiosco({ onAdmin }) {
     });
     cam.iniciarDeteccion();
   }
+}
+
+// Nadie usando la pantalla: sirve para renovar la sesión (recarga breve)
+// sin interrumpir a quien está marcando.
+export function kioscoLibre() {
+  return !st.codigo && !st.ocupado && !document.querySelector(".ov, .admin") && Date.now() - st.ultimoToque > 20000;
 }
 
 export { limpiar };

@@ -225,6 +225,13 @@ async function _sync() {
       await idb.put("registros", reg);
       syncState.estado = e instanceof SesionVencidaError ? "sesion" : "error";
       syncState.error = e.message;
+      // Un registro rechazado por SharePoint (400, 404…) no debe frenar a
+      // todos los que vienen detrás: se salta y se reintenta en el próximo
+      // ciclo. Sin sesión, sin red o con límite de Graph (401/403/429/5xx) sí
+      // se corta, porque fallarían todos igual.
+      const m = /-> (\d{3})/.exec(e.message);
+      const permanente = m && /^4/.test(m[1]) && !["401", "403", "429"].includes(m[1]);
+      if (permanente) continue;
       break; // se reintenta en el próximo ciclo
     }
     emit();
@@ -241,6 +248,12 @@ export async function syncRemoto() {
     const remotos = await graph.graphGetRegistros(ymd(sumarDias(hoy, -1)), ymd(hoy));
     const locales = new Set((await idb.getAll("registros")).map((r) => r.idLocal));
     for (const r of remotos) if (r.idLocal && !locales.has(r.idLocal)) await idb.put("registros", r);
+    if (syncState.estado === "sesion") {
+      syncState.estado = "ok";
+      syncState.error = "";
+      emit();
+      sync(); // sesión recuperada: enviar lo que quedó en espera
+    }
   } catch (e) {
     if (e instanceof SesionVencidaError) {
       syncState.estado = "sesion";
