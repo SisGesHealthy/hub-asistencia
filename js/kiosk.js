@@ -64,6 +64,14 @@ async function alCambiarCodigo() {
     return;
   }
   st.empleado = emp;
+  await pintarEstado(emp);
+  // En segundo plano: si la otra tablet ya registró algo, actualizar botones.
+  store.refrescarEmpleadoRemoto(emp.empleadoId).then((hayNuevo) => {
+    if (hayNuevo && st.empleado === emp && !st.ocupado) pintarEstado(emp);
+  });
+}
+
+async function pintarEstado(emp) {
   st.estado = await store.estadoEmpleado(emp.empleadoId);
   $("k-nombre").textContent = emp.nombre;
   const u = st.estado.ultimo;

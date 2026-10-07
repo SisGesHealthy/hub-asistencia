@@ -115,8 +115,9 @@ async function vistaReporte(body) {
     for (const [n, t] of [
       [new Set(jornadas.map((j) => j.empleadoId)).size, "personas"],
       [jornadas.length, "jornadas"],
+      [jornadas.filter((j) => j.enCurso).length, "en planta ahora"],
       [conNov, "con novedad"],
-      [jornadas.filter((j) => !j.salida).length, "sin salida"],
+      [jornadas.filter((j) => j.novedades.includes("Sin salida")).length, "sin salida"],
     ]) resumen.appendChild(el("div", { class: "kpi" }, [el("b", {}, String(n)), el("span", {}, t)]));
 
     tabla.innerHTML = "";
@@ -132,7 +133,7 @@ async function vistaReporte(body) {
         el("td", {}, h(j.ingreso)),
         el("td", {}, h(j.almIni)),
         el("td", {}, h(j.almFin)),
-        el("td", {}, h(j.salida)),
+        el("td", {}, j.salida ? h(j.salida) : j.enCurso ? el("span", { class: "en-curso" }, j.enAlmuerzo ? "En alimentación" : "En planta") : "—"),
         el("td", {}, j.horas != null ? j.horas.toFixed(1) : "—"),
         el("td", {}, j.novedades.map((n) => el("span", { class: "nov" }, n))),
       ]);

@@ -250,6 +250,22 @@ export async function syncRemoto() {
   }
 }
 
+// Al digitar un código: trae al instante lo que esa persona marcó en la OTRA
+// tablet (sin esperar el ciclo de 45 s), para no registrar un Ingreso doble.
+// Devuelve true si llegó algo nuevo.
+export async function refrescarEmpleadoRemoto(empleadoId) {
+  if (CONFIG.useMock || !navigator.onLine) return false;
+  try {
+    const remotos = await graph.graphGetRegistrosEmpleado(empleadoId, ymd(sumarDias(new Date(), -1)));
+    const locales = new Set((await idb.getAllByIndex("registros", "byEmpleado", empleadoId)).map((r) => r.idLocal));
+    let nuevos = 0;
+    for (const r of remotos) if (r.idLocal && !locales.has(r.idLocal)) { await idb.put("registros", r); nuevos++; }
+    return nuevos > 0;
+  } catch {
+    return false;
+  }
+}
+
 // La tablet solo necesita historia reciente; lo demás vive en SharePoint.
 // (En modo demo se guardan 40 días para que el reporte tenga algo que mostrar.)
 export async function purgarViejos() {
@@ -298,10 +314,17 @@ export function armarJornadas(regs) {
     const minAlm = almIni && almFin && almFin > almIni ? Math.round((almFin - almIni) / 60000) : null;
     const horas = ingreso && salida && salida > ingreso ? (salida - ingreso) / 3600000 - (minAlm || 0) / 60 : null;
 
+    // Jornada todavía abierta (la persona sigue en planta): que no tenga
+    // Salida aún NO es novedad. Solo pasa a "Sin salida" cuando vence el
+    // plazo máximo de jornada sin que haya marcado.
+    const ultimoTs = Math.max(...lista.map((r) => r.ts));
+    const enCurso = !salida && Date.now() - ultimoTs < CONFIG.horasMaxJornada * 3600 * 1000;
+    const enAlmuerzo = !!(enCurso && almIni && !almFin);
+
     const novedades = [];
     if (!ingreso) novedades.push("Sin ingreso");
-    if (!salida) novedades.push("Sin salida");
-    if (almIni && !almFin) novedades.push("Alimentación sin cerrar");
+    if (!salida && !enCurso) novedades.push("Sin salida");
+    if (almIni && !almFin && !enAlmuerzo) novedades.push("Alimentación sin cerrar");
     if (almFin && !almIni) novedades.push("Fin alimentación sin inicio");
     for (const [n, l] of [["Ingreso", ing], ["Salida", sal], ["Inicio alim.", ini], ["Fin alim.", fin]]) {
       if (l.length > 1) novedades.push(`${n} x${l.length}`);
@@ -314,7 +337,7 @@ export function armarJornadas(regs) {
       empleadoId: lista[0].empleadoId,
       nombre: lista[0].nombre,
       departamento: buscarEmpleado(lista[0].empleadoId)?.departamento || "",
-      ingreso, salida, almIni, almFin, minAlm, horas,
+      ingreso, salida, almIni, almFin, minAlm, horas, enCurso, enAlmuerzo,
       novedades,
       registros: lista,
     });
@@ -326,9 +349,10 @@ export function armarJornadas(regs) {
 export function jornadasACsv(jornadas) {
   const h = (ts) => (ts ? hhmm(ts) : "");
   const filas = [
-    ["Jornada", "EmpleadoID", "Nombre", "Departamento", "Ingreso", "Inicio alimentación", "Fin alimentación", "Salida", "Min. alimentación", "Horas trabajadas", "Novedades"],
+    ["Jornada", "EmpleadoID", "Nombre", "Departamento", "Estado", "Ingreso", "Inicio alimentación", "Fin alimentación", "Salida", "Min. alimentación", "Horas trabajadas", "Novedades"],
     ...jornadas.map((j) => [
-      j.jornada, j.empleadoId, j.nombre, j.departamento, h(j.ingreso), h(j.almIni), h(j.almFin), h(j.salida),
+      j.jornada, j.empleadoId, j.nombre, j.departamento, j.enAlmuerzo ? "En alimentación" : j.enCurso ? "En planta" : j.salida ? "Cerrada" : "Sin salida",
+      h(j.ingreso), h(j.almIni), h(j.almFin), h(j.salida),
       j.minAlm ?? "", j.horas != null ? j.horas.toFixed(2).replace(".", ",") : "", j.novedades.join(" | "),
     ]),
   ];

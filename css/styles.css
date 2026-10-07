@@ -216,6 +216,7 @@ button { font-family: inherit; cursor: pointer; touch-action: manipulation; }
 .rep-tabla tbody tr:not(.det) { cursor: pointer; }
 .rep-tabla tr.con-nov td:first-child { border-left: 4px solid var(--warn); }
 .nov { display: inline-block; background: #fbe9d2; color: #7a4a0c; border-radius: 99px; padding: 2px 8px; margin: 1px 4px 1px 0; font-size: 12px; }
+.en-curso { display: inline-block; background: var(--brand-50); color: var(--brand-700); border-radius: 99px; padding: 2px 8px; font-size: 12px; font-weight: 600; }
 .det td { background: var(--bg); white-space: normal; }
 .det-reg { padding: 3px 0; font-size: 13px; }
 .det-reg a { color: var(--almfin); }

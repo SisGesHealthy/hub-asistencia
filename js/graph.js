@@ -192,6 +192,16 @@ export async function graphGetRegistros(desde, hasta) {
   return items.map(fromFields);
 }
 
+// Marcaciones recientes de UNA persona (EmpleadoID y Jornada indexadas).
+export async function graphGetRegistrosEmpleado(empleadoId, desde) {
+  const filter = `fields/EmpleadoID eq '${empleadoId}' and fields/Jornada ge '${desde}'`;
+  const qs = new URLSearchParams({ expand: `fields($select=${["Title", ...CAMPOS_REGISTRO].join(",")})`, $filter: filter });
+  const data = await graphFetch(`${await listPath("registros")}/items?${qs}`, {
+    headers: { Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly" },
+  });
+  return (data.value || []).map(fromFields);
+}
+
 // ---- Fotos (biblioteca existente FotosBiometrico) ----
 
 async function getFotosDriveId() {
