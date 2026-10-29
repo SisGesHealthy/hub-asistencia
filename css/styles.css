@@ -272,3 +272,9 @@ button { font-family: inherit; cursor: pointer; touch-action: manipulation; }
 .alim-prov-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .alim-prov-head h3 { margin: 0; }
 .alim-prov-sec { max-width: none; }
+
+/* Aviso fuerte (alimentación excedida): no se cierra con un toque. */
+.ov-fuerte .ov-card { border-top-width: 14px; animation: ov-sacudir .45s ease-in-out; }
+.ov-fuerte .ov-titulo { font-size: 32px; }
+.ov-fuerte .ov-btn { background: var(--err); font-size: 20px; padding: 14px 34px; }
+@keyframes ov-sacudir { 0%, 100% { transform: none; } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }

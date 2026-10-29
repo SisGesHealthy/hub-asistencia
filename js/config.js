@@ -43,6 +43,11 @@ export const CONFIG = {
     activo: "Activo",
   },
 
+  // Tiempo de alimentación (entre Inicio y Fin). Al marcar Fin la tablet
+  // avisa si se pasó del máximo (queda como novedad para TH) o si tomó
+  // menos del mínimo.
+  tiempoAlimentacion: { maximo: 30, minimo: 20 },
+
   // ---- Pedido de alimentación ----
   // Cada persona pide en la tablet con su código; TH ve el consolidado por
   // proveedor y el descuento por persona. "hora" = hasta qué hora se acepta

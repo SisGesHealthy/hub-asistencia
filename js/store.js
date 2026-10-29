@@ -146,6 +146,22 @@ export async function registrar({ empleado, accion, fotoBlob, cara, confirmadoFu
     jornada = accion !== "Ingreso" && ahora.getHours() < 6 ? ymd(sumarDias(ahora, -1)) : ymd(ahora);
   }
 
+  // Fin de alimentación: minutos desde el Inicio de la misma jornada.
+  let minutosAlimentacion = null;
+  if (accion === "Fin_Almuerzo") {
+    const ini = regs.filter((r) => r.accion === "Inicio_Almuerzo" && r.jornada === jornada && r.ts < ahora).pop();
+    if (ini) minutosAlimentacion = Math.round((ahora - ini.ts) / 60000);
+  }
+  const notas = [];
+  if (fueraSecuencia) notas.push(`Fuera de secuencia (esperaba ${estado.esperadas.join(" o ")})`);
+  if (minutosAlimentacion != null) {
+    const { maximo, minimo } = CONFIG.tiempoAlimentacion;
+    let t = `Alimentación: ${minutosAlimentacion} min`;
+    if (minutosAlimentacion > maximo) t += ` (excede ${minutosAlimentacion - maximo} min)`;
+    else if (minutosAlimentacion < minimo) t += ` (faltaron ${minimo - minutosAlimentacion} min)`;
+    notas.push(t);
+  }
+
   const reg = {
     idLocal: crypto.randomUUID(),
     empleadoId: empleado.empleadoId,
@@ -157,7 +173,8 @@ export async function registrar({ empleado, accion, fotoBlob, cara, confirmadoFu
     dispositivo: getDispositivo(),
     cara,
     fueraSecuencia,
-    observacion: fueraSecuencia ? `Fuera de secuencia (esperaba ${estado.esperadas.join(" o ")})` : "",
+    observacion: notas.join(" · "),
+    minutosAlimentacion,
     fotoUrl: "",
     sincronizado: CONFIG.useMock,
     intentos: 0,
@@ -355,6 +372,8 @@ export function armarJornadas(regs) {
     for (const [n, l] of [["Ingreso", ing], ["Salida", sal], ["Inicio alim.", ini], ["Fin alim.", fin]]) {
       if (l.length > 1) novedades.push(`${n} x${l.length}`);
     }
+    if (minAlm != null && minAlm > CONFIG.tiempoAlimentacion.maximo) novedades.push(`Alimentación excedida +${minAlm - CONFIG.tiempoAlimentacion.maximo} min`);
+    if (minAlm != null && minAlm < CONFIG.tiempoAlimentacion.minimo) novedades.push(`Alimentación corta (${minAlm} min)`);
     if (lista.some((r) => r.fueraSecuencia)) novedades.push("Fuera de secuencia");
     if (lista.some((r) => r.cara === "No detectada" || r.cara === "Sin cámara")) novedades.push("Sin rostro");
 

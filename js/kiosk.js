@@ -195,6 +195,34 @@ async function alPresionar(accion) {
     if (res.ok) {
       const extra = cara === "Detectada" ? "" : `<div class="ov-nota">Rostro: ${cara}</div>`;
       const nombre = primerNombre(st.empleado.nombre);
+      const min = res.reg.minutosAlimentacion;
+      const { maximo, minimo } = CONFIG.tiempoAlimentacion;
+      if (accion === "Fin_Almuerzo" && min != null && min > maximo) {
+        // Aviso fuerte: rojo y se cierra solo con "Entendido".
+        const exceso = min - maximo;
+        const box = overlay(
+          "error ov-fuerte",
+          `${nombre}, se excedió en ${exceso} minuto${exceso === 1 ? "" : "s"}`,
+          `Su tiempo de alimentación fue de <b>${min} minutos</b> (el permitido es de ${maximo}).<br><br><b>Esta novedad queda registrada y notificada a Talento Humano.</b>`,
+          [el("button", { class: "ov-btn", onclick: () => box.remove() }, "Entendido")]
+        );
+        // Si nadie toca "Entendido", se cierra igual para no bloquear la fila.
+        setTimeout(() => box.remove(), 12000);
+        limpiar();
+        return;
+      }
+      if (accion === "Fin_Almuerzo" && min != null && min < minimo) {
+        const falta = minimo - min;
+        overlay(
+          "aviso",
+          `${nombre}, le faltaron ${falta} minuto${falta === 1 ? "" : "s"}`,
+          `Su tiempo de alimentación fue de <b>${min} minutos</b>.<br>Recuerde tomar su tiempo completo de alimentación (mínimo ${minimo} minutos) mañana.`,
+          null,
+          6000
+        );
+        limpiar();
+        return;
+      }
       overlay(
         "ok",
         saludo(accion, nombre),
