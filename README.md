@@ -94,3 +94,21 @@ python serve_dev.py 8793
 `useMock: true` usa `data/empleados_demo.json` (no versionado: contiene
 datos de personal). En el panel TH → Esta tablet → "Cargar marcaciones de
 ejemplo" carga el export real del 01/10/2026 para probar el reporte.
+
+## Pedido de alimentación
+
+Botón **Pedir alimentación** bajo los botones de marcación (se habilita al
+digitar el código). No cambia nada del registro de asistencia.
+
+- Cada persona pide para **hoy**; un pedido por comida (Desayuno, Almuerzo,
+  Sopa, Merienda). Se descuenta del rol. Puede cancelar antes de la hora límite.
+- Pasada la hora límite la tablet **no deja pedir** y explica hasta qué hora se recibe.
+- Supervisores/jefes (Puesto con SUPERVISOR, JEFE o GERENTE) ven además
+  **A nombre de Healthy**: solo secos, con cantidad y área; no se descuenta.
+- Panel TH → **Alimentación**: pedido consolidado por proveedor (botón
+  *Copiar pedido* para WhatsApp/correo), descuento por persona y detalle,
+  ambos descargables a Excel.
+- Precios, horarios y proveedores: `js/config.js`, bloque `alimentacion`.
+- Requiere la lista **PedidosAlimentacion** (ver
+  `Hub_Asistencia_Lista_PedidosAlimentacion.xlsx`). Mientras no exista, los
+  pedidos quedan guardados en la tablet y se envían cuando se cree.

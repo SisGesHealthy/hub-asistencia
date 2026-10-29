@@ -230,3 +230,45 @@ button { font-family: inherit; cursor: pointer; touch-action: manipulation; }
 .kv { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
 .kv b { text-align: right; word-break: break-word; }
 .tab-msg { color: var(--ok); font-weight: 600; min-height: 22px; }
+
+/* ---------- pedido de alimentación ---------- */
+.btn-alim {
+  margin-top: 12px; width: 100%; border: 2px solid var(--brand); background: var(--brand-50); color: var(--brand-700);
+  border-radius: 14px; padding: 10px; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.btn-alim svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-alim:disabled { border: 1px dashed var(--border); background: var(--bg); color: #b4bcaa; cursor: default; }
+.ov-sobre { z-index: 60; }
+.ov-alim { align-items: stretch; }
+.alim-card { background: var(--card); border-radius: 22px; width: 100%; max-width: 1100px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+.alim-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.alim-head h2 { margin: 0; font-size: 22px; font-weight: 800; }
+.alim-over { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--brand-700); }
+.alim-cuerpo { flex: 1; overflow: auto; padding: 14px 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+.alim-modo { display: flex; gap: 8px; flex-wrap: wrap; }
+.alim-modo button { flex: 1; border: 1px solid var(--border); background: var(--bg); border-radius: 12px; padding: 10px; font-size: 15px; font-weight: 600; color: var(--dim); }
+.alim-modo button.on { border-color: var(--brand); background: var(--brand-50); color: var(--brand-700); }
+.alim-mios { background: var(--brand-50); border-radius: 14px; padding: 10px 14px; }
+.alim-sub { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-700); margin-bottom: 6px; }
+.alim-mio { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0; font-size: 15px; }
+.alim-mio .ov-btn { padding: 6px 14px; font-size: 14px; }
+.alim-mio small { color: var(--dim); }
+.alim-comida { border: 1px solid var(--border); border-radius: 16px; padding: 12px 14px; }
+.alim-comida.cerrada { opacity: .55; }
+.alim-comida-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.alim-comida-head h3 { margin: 0; font-size: 19px; font-weight: 800; }
+.alim-hora { font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: var(--brand-50); color: var(--brand-700); }
+.alim-hora.off { background: #fde7e9; color: var(--err); }
+.alim-ya { font-size: 13px; font-weight: 600; color: var(--warn); }
+.alim-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.alim-item { background: var(--bg); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.alim-item-nombre { font-weight: 700; font-size: 16px; }
+.alim-precios { display: flex; gap: 8px; flex-wrap: wrap; }
+.alim-prov { flex: 1; min-width: 100px; border: none; border-radius: 10px; background: var(--key); color: #fff; padding: 8px 10px; display: flex; flex-direction: column; align-items: flex-start; font-size: 13px; }
+.alim-prov b { font-size: 18px; }
+.alim-prov:active { background: var(--key-hi); }
+.alim-nota { width: 100%; margin-top: 10px; padding: 10px; font-size: 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--ink); font-family: inherit; }
+.alim-h3 { margin: 18px 0 8px; font-size: 17px; }
+.alim-prov-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.alim-prov-head h3 { margin: 0; }
+.alim-prov-sec { max-width: none; }

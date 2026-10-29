@@ -4,6 +4,7 @@ import { initAuth, puedeRenovar, renovarSesion } from "./auth.js";
 import * as store from "./store.js";
 import { iniciarKiosco, kioscoLibre } from "./kiosk.js";
 import { pedirPin, abrirPanel } from "./admin.js";
+import * as alim from "./alimentacion.js";
 
 async function main() {
   let cuenta = null;
@@ -27,6 +28,13 @@ async function main() {
   setInterval(() => store.syncRemoto(), CONFIG.segundosSyncRemoto * 1000);
   setInterval(() => store.refrescarEmpleados().catch(() => {}), CONFIG.minutosRefrescoEmpleados * 60000);
   window.addEventListener("online", () => store.sync());
+
+  // Pedidos de alimentación (mismo ritmo que las marcaciones).
+  alim.purgarPedidosViejos();
+  alim.syncRemotoPedidos().then(() => alim.syncPedidos());
+  setInterval(() => alim.syncPedidos(), 20000);
+  setInterval(() => alim.syncRemotoPedidos(), CONFIG.segundosSyncRemoto * 1000);
+  window.addEventListener("online", () => alim.syncPedidos());
 
   // Sesión vencida (Microsoft corta la renovación silenciosa a las 24 h):
   // renovarla sola, sin pantalla de login, apenas el kiosco esté libre.

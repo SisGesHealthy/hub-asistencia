@@ -7,6 +7,7 @@ import { el } from "./dom.js";
 import * as store from "./store.js";
 import { idb } from "./db.js";
 import { login, logout, getCurrentUser } from "./auth.js";
+import { vistaAlimentacion } from "./alim-ui.js";
 
 const root = () => document.getElementById("overlay-root");
 
@@ -66,6 +67,7 @@ export function abrirPanel() {
   const body = el("div", { class: "admin-body" });
   const tabs = [
     ["reporte", "Reporte de jornadas", () => vistaReporte(body)],
+    ["alimentacion", "Alimentación", () => vistaAlimentacion(body)],
     ["tablet", "Esta tablet", () => vistaTablet(body)],
   ];
   const nav = el(

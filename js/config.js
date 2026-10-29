@@ -26,6 +26,8 @@ export const CONFIG = {
       empleados: "Empleados",
       // Lista NUEVA (ver README): la vieja "Asistencias" queda como histórico.
       registros: "RegistrosAsistencia",
+      // Lista NUEVA para los pedidos de alimentación (ver README).
+      pedidos: "PedidosAlimentacion",
     },
     // Biblioteca existente donde ya se guardan las fotos de la Power App.
     photoLibraryName: "FotosBiometrico",
@@ -39,6 +41,35 @@ export const CONFIG = {
     departamento: "Departamento",
     puesto: "Puesto",
     activo: "Activo",
+  },
+
+  // ---- Pedido de alimentación ----
+  // Cada persona pide en la tablet con su código; TH ve el consolidado por
+  // proveedor y el descuento por persona. "hora" = hasta qué hora se acepta
+  // el pedido del día (después, la tablet no lo deja pasar y explica por qué).
+  // "precios" = costo por proveedor; si un proveedor no lo ofrece, no va.
+  // "comida" agrupa: una persona puede tener UN pedido por comida al día.
+  // Para cambiar precios u horarios, editar solo esta tabla.
+  alimentacion: {
+    proveedores: {
+      monica: "Mónica",
+      humaquinga: "Humaquinga (frente)",
+    },
+    menu: [
+      { id: "seco_desayuno", nombre: "Seco desayuno", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 2.25 }, seco: true },
+      { id: "desayuno_pan", nombre: "Desayuno pan, leche, huevos", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 1.5 } },
+      { id: "desayuno_agua", nombre: "Desayuno completo con agua", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 3 } },
+      { id: "desayuno_leche", nombre: "Desayuno completo con leche", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 3 } },
+      { id: "seco_almuerzo", nombre: "Seco almuerzo", comida: "Almuerzo", hora: "09:00", precios: { monica: 2, humaquinga: 2.25 }, seco: true },
+      { id: "almuerzo", nombre: "Almuerzo", comida: "Almuerzo", hora: "09:00", precios: { monica: 3, humaquinga: 3 } },
+      { id: "seco_dieta", nombre: "Seco dieta", comida: "Almuerzo", hora: "09:00", precios: { monica: 2.5 }, seco: true },
+      { id: "sopa", nombre: "Sopa", comida: "Sopa", hora: "09:00", precios: { humaquinga: 1.5 } },
+      { id: "seco_merienda", nombre: "Seco merienda", comida: "Merienda", hora: "15:00", precios: { monica: 2, humaquinga: 2.25 }, seco: true },
+      { id: "merienda", nombre: "Merienda", comida: "Merienda", hora: "15:00", precios: { monica: 3, humaquinga: 3 } },
+    ],
+    // Quién puede pedir "a nombre de Healthy" (secos que no se descuentan
+    // del rol): Puesto en la lista Empleados que contenga alguna de estas palabras.
+    puestosPedidoHealthy: ["SUPERVISOR", "JEFE", "GERENTE"],
   },
 
   // PIN para abrir el panel de Talento Humano desde el botón de la esquina.

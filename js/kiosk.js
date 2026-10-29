@@ -5,6 +5,7 @@ import { CONFIG } from "./config.js";
 import { el } from "./dom.js";
 import * as store from "./store.js";
 import * as cam from "./camera.js";
+import { abrirPedido } from "./alim-ui.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -33,6 +34,7 @@ function limpiar() {
   $("k-nombre").textContent = "";
   $("k-detalle").textContent = "";
   $("k-codigo-error").textContent = "";
+  $("btn-alim").disabled = true;
   document.querySelectorAll(".acc").forEach((b) => {
     b.disabled = true;
     b.classList.remove("esperada", "otra");
@@ -54,6 +56,7 @@ async function alCambiarCodigo() {
     $("k-nombre").textContent = "";
     $("k-detalle").textContent = "";
     document.querySelectorAll(".acc").forEach((b) => (b.disabled = true));
+    $("btn-alim").disabled = true;
     if (st.codigo.length >= 4) {
       // Tablet nueva sin sesión: no es que el código esté mal, es que aún
       // no se descargó la lista de empleados.
@@ -84,6 +87,7 @@ async function pintarEstado(emp) {
     b.classList.toggle("esperada", esperada);
     b.classList.toggle("otra", !esperada);
   });
+  $("btn-alim").disabled = false;
 }
 
 function tecla(d) {
@@ -231,8 +235,16 @@ export async function iniciarKiosco({ onAdmin }) {
 
   document.querySelectorAll(".pad button").forEach((b) => b.addEventListener("click", () => tecla(b.dataset.d)));
   document.querySelectorAll(".acc").forEach((b) => b.addEventListener("click", () => alPresionar(b.dataset.accion)));
+  // Pedido de alimentación: no depende de la marcación (se puede pedir en
+  // cualquier momento, con el código), y mientras la ventana está abierta
+  // no corre el reloj de inactividad del kiosco.
+  $("btn-alim").addEventListener("click", () => {
+    if (!st.empleado || st.ocupado) return;
+    clearTimeout(st.timer);
+    abrirPedido(st.empleado, { onCerrar: limpiar });
+  });
   document.addEventListener("keydown", (e) => {
-    if (document.querySelector(".admin, .ov-aviso") || e.target.tagName === "INPUT") return;
+    if (document.querySelector(".admin, .ov-aviso, .ov-alim, .ov-sobre") || e.target.tagName === "INPUT") return;
     if (/^[0-9]$/.test(e.key)) tecla(e.key);
     else if (e.key === "Backspace") tecla("borrar");
     else if (e.key === "Escape") tecla("ok");

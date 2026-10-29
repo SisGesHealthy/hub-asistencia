@@ -202,6 +202,90 @@ export async function graphGetRegistrosEmpleado(empleadoId, desde) {
   return (data.value || []).map(fromFields);
 }
 
+// ---- PedidosAlimentacion (lista nueva) ----
+// Title = IdLocal; Fecha (yyyy-mm-dd) y EmpleadoID indexadas.
+
+const CAMPOS_PEDIDO = [
+  "EmpleadoID", "Nombre", "Fecha", "Comida", "Producto", "Proveedor", "Costo",
+  "Cantidad", "Tipo", "Estado", "FechaHora", "Dispositivo", "Observacion",
+];
+
+function pedidoToFields(p) {
+  return {
+    Title: p.idLocal,
+    EmpleadoID: p.empleadoId,
+    Nombre: p.nombre,
+    Fecha: p.fecha,
+    Comida: p.comida,
+    Producto: p.producto,
+    Proveedor: p.proveedor,
+    Costo: p.costo,
+    Cantidad: p.cantidad,
+    Tipo: p.tipo,
+    Estado: p.estado,
+    FechaHora: new Date(p.ts).toISOString(),
+    Dispositivo: p.dispositivo,
+    Observacion: p.observacion || "",
+  };
+}
+
+function pedidoFromItem(it) {
+  const f = it.fields || {};
+  return {
+    idLocal: f.Title,
+    _itemId: it.id,
+    empleadoId: f.EmpleadoID,
+    nombre: f.Nombre,
+    fecha: f.Fecha,
+    comida: f.Comida,
+    producto: f.Producto,
+    proveedor: f.Proveedor,
+    costo: Number(f.Costo) || 0,
+    cantidad: Number(f.Cantidad) || 1,
+    tipo: f.Tipo,
+    estado: f.Estado,
+    ts: Date.parse(f.FechaHora),
+    dispositivo: f.Dispositivo,
+    observacion: f.Observacion,
+    pendiente: null,
+  };
+}
+
+// Devuelve el id numérico de SharePoint (para poder cancelar después).
+export async function graphCrearPedido(p) {
+  const data = await graphFetch(`${await listPath("pedidos")}/items`, {
+    method: "POST",
+    body: JSON.stringify({ fields: pedidoToFields(p) }),
+  });
+  return data.id;
+}
+
+export async function graphActualizarPedido(itemId, cambios) {
+  await graphFetch(`${await listPath("pedidos")}/items/${itemId}/fields`, {
+    method: "PATCH",
+    body: JSON.stringify(cambios),
+  });
+}
+
+// Busca un pedido por IdLocal (reintentos, o cancelar uno creado en la otra tablet).
+export async function graphBuscarPedido(idLocal) {
+  const qs = new URLSearchParams({ $filter: `fields/Title eq '${idLocal}'`, expand: "fields($select=Title)" });
+  const data = await graphFetch(`${await listPath("pedidos")}/items?${qs}`, {
+    headers: { Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly" },
+  });
+  return (data.value || [])[0]?.id || null;
+}
+
+export async function graphGetPedidos(desde, hasta, empleadoId = null) {
+  let filter = `fields/Fecha ge '${desde}' and fields/Fecha le '${hasta}'`;
+  if (empleadoId) filter = `fields/EmpleadoID eq '${empleadoId}' and ${filter}`;
+  const qs = new URLSearchParams({ expand: `fields($select=${["Title", ...CAMPOS_PEDIDO].join(",")})`, $filter: filter, $top: "500" });
+  const items = await getAllPages(`${await listPath("pedidos")}/items?${qs}`, {
+    headers: { Prefer: "HonorNonIndexedQueriesWarningMayFailRandomly" },
+  });
+  return items.map(pedidoFromItem);
+}
+
 // ---- Fotos (biblioteca existente FotosBiometrico) ----
 
 async function getFotosDriveId() {

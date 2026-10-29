@@ -3,7 +3,7 @@
 // la otra tablet) y fotos pendientes de subir.
 
 const DB_NAME = "hub-asistencia";
-const DB_VERSION = 2;
+const DB_VERSION = 3; // 3: + pedidos de alimentación
 
 let dbPromise = null;
 
@@ -20,6 +20,10 @@ function openDb() {
       }
       if (!db.objectStoreNames.contains("fotos")) db.createObjectStore("fotos", { keyPath: "idLocal" });
       if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta", { keyPath: "id" });
+      if (!db.objectStoreNames.contains("pedidos")) {
+        const p = db.createObjectStore("pedidos", { keyPath: "idLocal" });
+        p.createIndex("byFecha", "fecha");
+      }
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
