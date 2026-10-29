@@ -212,11 +212,11 @@ async function alPresionar(accion) {
         return;
       }
       if (accion === "Fin_Almuerzo" && min != null && min < minimo) {
-        const falta = minimo - min;
+        const falta = maximo - min;
         overlay(
           "aviso",
           `${nombre}, le faltaron ${falta} minuto${falta === 1 ? "" : "s"}`,
-          `Su tiempo de alimentación fue de <b>${min} minutos</b>.<br>Recuerde tomar su tiempo completo de alimentación (mínimo ${minimo} minutos) mañana.`,
+          `Tomó solo <b>${min} minutos</b> de sus <b>${maximo} minutos</b> de alimentación.<br>Recuerde tomar su tiempo completo mañana.`,
           null,
           6000
         );

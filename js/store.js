@@ -158,7 +158,7 @@ export async function registrar({ empleado, accion, fotoBlob, cara, confirmadoFu
     const { maximo, minimo } = CONFIG.tiempoAlimentacion;
     let t = `Alimentación: ${minutosAlimentacion} min`;
     if (minutosAlimentacion > maximo) t += ` (excede ${minutosAlimentacion - maximo} min)`;
-    else if (minutosAlimentacion < minimo) t += ` (faltaron ${minimo - minutosAlimentacion} min)`;
+    else if (minutosAlimentacion < minimo) t += ` (faltaron ${maximo - minutosAlimentacion} min de ${maximo})`;
     notas.push(t);
   }
 
@@ -373,7 +373,7 @@ export function armarJornadas(regs) {
       if (l.length > 1) novedades.push(`${n} x${l.length}`);
     }
     if (minAlm != null && minAlm > CONFIG.tiempoAlimentacion.maximo) novedades.push(`Alimentación excedida +${minAlm - CONFIG.tiempoAlimentacion.maximo} min`);
-    if (minAlm != null && minAlm < CONFIG.tiempoAlimentacion.minimo) novedades.push(`Alimentación corta (${minAlm} min)`);
+    if (minAlm != null && minAlm < CONFIG.tiempoAlimentacion.minimo) novedades.push(`Alimentación corta (${minAlm} de ${CONFIG.tiempoAlimentacion.maximo} min)`);
     if (lista.some((r) => r.fueraSecuencia)) novedades.push("Fuera de secuencia");
     if (lista.some((r) => r.cara === "No detectada" || r.cara === "Sin cámara")) novedades.push("Sin rostro");
 
