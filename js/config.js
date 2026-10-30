@@ -58,19 +58,19 @@ export const CONFIG = {
   alimentacion: {
     proveedores: {
       monica: "Mónica",
-      humaquinga: "Humaquinga (frente)",
+      yanacallo: "María Yanacallo (frente)",
     },
     menu: [
-      { id: "seco_desayuno", nombre: "Seco desayuno", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 2.25 }, seco: true },
-      { id: "desayuno_pan", nombre: "Desayuno pan, leche, huevos", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 1.5 } },
-      { id: "desayuno_agua", nombre: "Desayuno completo con agua", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 3 } },
-      { id: "desayuno_leche", nombre: "Desayuno completo con leche", comida: "Desayuno", hora: "07:00", precios: { humaquinga: 3 } },
-      { id: "seco_almuerzo", nombre: "Seco almuerzo", comida: "Almuerzo", hora: "09:00", precios: { monica: 2, humaquinga: 2.25 }, seco: true },
-      { id: "almuerzo", nombre: "Almuerzo", comida: "Almuerzo", hora: "09:00", precios: { monica: 3, humaquinga: 3 } },
+      { id: "seco_desayuno", nombre: "Seco desayuno", comida: "Desayuno", hora: "07:00", precios: { yanacallo: 2.25 }, seco: true },
+      { id: "desayuno_pan", nombre: "Desayuno pan, leche, huevos", comida: "Desayuno", hora: "07:00", precios: { yanacallo: 1.5 } },
+      { id: "desayuno_agua", nombre: "Desayuno completo con agua", comida: "Desayuno", hora: "07:00", precios: { yanacallo: 3 } },
+      { id: "desayuno_leche", nombre: "Desayuno completo con leche", comida: "Desayuno", hora: "07:00", precios: { yanacallo: 3 } },
+      { id: "seco_almuerzo", nombre: "Seco almuerzo", comida: "Almuerzo", hora: "09:00", precios: { monica: 2, yanacallo: 2.25 }, seco: true },
+      { id: "almuerzo", nombre: "Almuerzo", comida: "Almuerzo", hora: "09:00", precios: { monica: 3, yanacallo: 3 } },
       { id: "seco_dieta", nombre: "Seco dieta", comida: "Almuerzo", hora: "09:00", precios: { monica: 2.5 }, seco: true },
-      { id: "sopa", nombre: "Sopa", comida: "Sopa", hora: "09:00", precios: { humaquinga: 1.5 } },
-      { id: "seco_merienda", nombre: "Seco merienda", comida: "Merienda", hora: "15:00", precios: { monica: 2, humaquinga: 2.25 }, seco: true },
-      { id: "merienda", nombre: "Merienda", comida: "Merienda", hora: "15:00", precios: { monica: 3, humaquinga: 3 } },
+      { id: "sopa", nombre: "Sopa", comida: "Sopa", hora: "09:00", precios: { yanacallo: 1.5 } },
+      { id: "seco_merienda", nombre: "Seco merienda", comida: "Merienda", hora: "15:00", precios: { monica: 2, yanacallo: 2.25 }, seco: true },
+      { id: "merienda", nombre: "Merienda", comida: "Merienda", hora: "15:00", precios: { monica: 3, yanacallo: 3 } },
     ],
     // Quién puede pedir "a nombre de Healthy" (secos que no se descuentan
     // del rol): Puesto en la lista Empleados que contenga alguna de estas palabras.
